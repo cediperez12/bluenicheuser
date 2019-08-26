@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "531646876153",
+    "firebase_url": "https://blueniche-cf882.firebaseio.com",
+    "project_id": "blueniche-cf882",
+    "storage_bucket": "blueniche-cf882.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531646876153:android:da7bed7ce30e92da",
+        "android_client_info": {
+          "package_name": "com.coecs.bluenicheuser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531646876153-36ub4p56e63vt04q0ot30hi2esk6g3sr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coecs.bluenicheuser",
+            "certificate_hash": "f73d6652401a1d05c1734460dae0b08d66c8f28f"
+          }
+        },
+        {
+          "client_id": "531646876153-fsmh9ouvpvrh76j0qaghtt89hiaju43i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRmK9jjuj2beWbs5Jt-U66VHjX5EYE9LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531646876153-fsmh9ouvpvrh76j0qaghtt89hiaju43i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

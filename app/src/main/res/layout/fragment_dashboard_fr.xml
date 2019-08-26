@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".dashboard_fr">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/create_job_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textAllCaps="false"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:drawableRight="@drawable/ic_event_note_black_24dp"
+            android:drawableTint="@color/gray"
+            android:text="Create a Job Post"/>
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/create_job_btn"
+            android:layout_margin="8dp"
+            android:text="Top Workers"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listview_top_workers"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/textView8"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="New Workers"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_below="@id/listview_top_workers"
+            android:textSize="14sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/textView9"
+            android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+
+
+</ScrollView>
