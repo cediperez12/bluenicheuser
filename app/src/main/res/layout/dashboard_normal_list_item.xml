@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="4dp"
+    android:padding="16dp"
+    android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="85dp"
-        android:layout_height="125dp"
-        app:cardCornerRadius="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_centerHorizontal="true">
+    <RelativeLayout
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/dashboard_user_profile_photo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_person_black_24dp"/>
+
+        <TextView
+            android:id="@+id/dashboard_user_profile_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/dashboard_user_profile_photo"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="Christian Daniel N.Perez"
+            android:layout_marginLeft="8dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"/>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:src="@color/shadowgray"/>
+        <TextView
+            android:id="@+id/dashboard_user_profile_sub_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/dashboard_user_profile_photo"
+            android:layout_below="@+id/dashboard_user_profile_name"
+            android:layout_marginLeft="8dp"
+            android:text="Construction Worker - Meycauayan"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Line 1"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:layout_marginLeft="4dp"/>
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Line 2"
-                android:layout_marginLeft="4dp"
-                />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

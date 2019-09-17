@@ -1,8 +1,24 @@
 package com.coecs.bluenicheuser;
 
+import android.support.v7.widget.RecyclerView;
+
 public class User {
 
-    private String uid,firstname,lastname,userType,workerCoverLocation;
+    private String uid;
+    private String firstname;
+    private String lastname;
+    private String userType;
+    private String workerCoverLocation;
+
+    public String getWorkerProfession() {
+        return workerProfession;
+    }
+
+    public void setWorkerProfession(String workerProfession) {
+        this.workerProfession = workerProfession;
+    }
+
+    private String workerProfession;
     private double userRate;
     private int job;
     private double workerJobRate;

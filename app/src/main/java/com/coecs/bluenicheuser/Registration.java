@@ -1,5 +1,6 @@
 package com.coecs.bluenicheuser;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -46,52 +47,72 @@ public class Registration extends AppCompatActivity {
         this.finish();
     }
 
+    ProgressDialog progressDialog;
+    ErrorMessageCreator emc;
+
     public void onClickSignUp(View view){
-        String email = etxt_email.getText().toString().trim();
-        String pass = etxt_pass.getText().toString().trim();
-        final String fname = etxt_fname.getText().toString().trim();
-        final String lname = etxt_lname.getText().toString().trim();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..."); // Setting Message
+        progressDialog.setTitle("Signing Up"); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.setCancelable(false);
 
-        if(email.isEmpty() || pass.isEmpty()){
-            new ErrorMessageCreator().createSimpleErrorMessage(Registration.this,"Registration","Email and Password cannot be empty.");
-        }else if(fname.isEmpty() || lname.isEmpty()){
-            new ErrorMessageCreator().createSimpleErrorMessage(Registration.this,"Registration","First name and Last name cannot be empty.");
-        }else{
-            auth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(final AuthResult authResult) {
-                    User u = new User();
-                    u.setFirstname(fname);
-                    u.setLastname(lname);
-                    u.setUid(authResult.getUser().getUid());
-                    u.setUserType("USER");
-                    u.setUserRate(0.0);
-                    u.setJob(0);
+        emc = new ErrorMessageCreator();
 
-                    mDatabase.getReference("USERS").push().setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
+         // Display Progress Dialog
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String email = etxt_email.getText().toString().trim();
+                String pass = etxt_pass.getText().toString().trim();
+                final String fname = etxt_fname.getText().toString().trim();
+                final String lname = etxt_lname.getText().toString().trim();
+
+                if(email.isEmpty() || pass.isEmpty()){
+                    emc.createSimpleErrorMessage(Registration.this,"Registration","Email and Password cannot be empty.");
+                }else if(fname.isEmpty() || lname.isEmpty()){
+                    emc.createSimpleErrorMessage(Registration.this,"Registration","First name and Last name cannot be empty.");
+                }else{
+                    progressDialog.show();
+                    auth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                auth.signOut();
-                                new ErrorMessageCreator().createSimpleMessage(Registration.this, "Registration", "Thank you for your registration, you may now log in to the application.", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        toLogin();
+                        public void onSuccess(final AuthResult authResult) {
+                            User u = new User();
+                            u.setFirstname(fname);
+                            u.setLastname(lname);
+                            u.setUid(authResult.getUser().getUid());
+                            u.setUserType("USER");
+                            u.setUserRate(0.0);
+                            u.setJob(0);
+
+                            mDatabase.getReference("USERS").child(u.getUid()).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        auth.signOut();
+                                        emc.createSimpleMessage(Registration.this, "Registration", "Thank you for your registration, you may now log in to the application.", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                toLogin();
+                                            }
+                                        });
+                                    }else{
+                                        emc.createSimpleErrorMessage(Registration.this,"Registration",task.getException().getMessage());
                                     }
-                                });
-                            }else{
-                                new ErrorMessageCreator().createSimpleErrorMessage(Registration.this,"Registration",task.getException().getMessage());
-                            }
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            emc.createSimpleErrorMessage(Registration.this,"Registration",e.getMessage());
                         }
                     });
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    new ErrorMessageCreator().createSimpleErrorMessage(Registration.this,"Registration",e.getMessage());
-                }
-            });
-        }
+                progressDialog.show();
+            }
+        }).start();
     }
 
     public void onClickSignIn(View v){

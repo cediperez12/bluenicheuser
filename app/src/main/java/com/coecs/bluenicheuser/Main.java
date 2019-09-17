@@ -33,16 +33,6 @@ public class Main extends AppCompatActivity
 
     private void init(){
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            startActivity(new Intent(getApplicationContext(),Login.class));
-            finish();
-        }else{
-
-        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,6 +44,16 @@ public class Main extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        if(currentUser == null){
+            startActivity(new Intent(getApplicationContext(),Login.class));
+            finish();
+        }else{
+            getSupportFragmentManager().beginTransaction().replace(R.id.fr_replacer_c_main,new dashboard_fr()).commit();
+        }
     }
 
     @Override
@@ -94,17 +94,21 @@ public class Main extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        switch (id){
 
-        } else if (id == R.id.nav_slideshow) {
+            case R.id.nav_search:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fr_replacer_c_main,new search_fr()).commit();
+                break;
 
-        } else if (id == R.id.nav_manage) {
+            case R.id.nav_dashboard:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fr_replacer_c_main,new dashboard_fr()).commit();
+                break;
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+            case R.id.nav_logout:
+                mAuth.signOut();
+                startActivity(new Intent(getApplicationContext(),Login.class));
+                finish();
+                break;
 
         }
 

@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/create_job_btn"
@@ -39,29 +39,13 @@
             android:textColor="@android:color/black"
             android:textSize="14sp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listview_top_workers"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:orientation="horizontal"
-            android:layout_below="@id/textView8"></android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/textView9"
+        <LinearLayout
+            android:id="@+id/dashboard_top_worker_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="New Workers"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_below="@id/listview_top_workers"
-            android:textSize="14sp"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@id/textView9"
-            android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+            android:layout_below="@id/textView8"
+            android:orientation="vertical"
+            android:padding="4dp"/>
 
     </RelativeLayout>
 
