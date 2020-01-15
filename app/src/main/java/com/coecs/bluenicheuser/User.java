@@ -9,6 +9,25 @@ public class User {
     private String lastname;
     private String userType;
     private String workerCoverLocation;
+    private String wokrerCurrentStatus;
+
+    private int userProfileImage = -1;
+
+    public int getUserProfileImage() {
+        return userProfileImage;
+    }
+
+    public void setUserProfileImage(int userProfileImage) {
+        this.userProfileImage = userProfileImage;
+    }
+
+    public String getWokrerCurrentStatus() {
+        return wokrerCurrentStatus;
+    }
+
+    public void setWokrerCurrentStatus(String wokrerCurrentStatus) {
+        this.wokrerCurrentStatus = wokrerCurrentStatus;
+    }
 
     public String getWorkerProfession() {
         return workerProfession;

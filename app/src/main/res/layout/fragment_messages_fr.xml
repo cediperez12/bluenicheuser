@@ -1,22 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".messages_fr">
+    tools:context=".messages_fr"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtv_markall"
+    <EditText
+        android:id="@+id/etxt_fr_searchbox_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/search_edittext_search"
+        android:backgroundTint="@color/shadowgray"
+        android:layout_toStartOf="@+id/search_btn_fr"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Search for Job Titles"
+        android:drawableLeft="@drawable/ic_search_black_24dp"
+        android:textColor="@android:color/white"
+        android:drawableTint="#b7b8c0"
+        android:padding="8dp"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/messages_empty_job_txtv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You do not have Job Messages"
+        android:textAlignment="center"
+        android:layout_margin="24dp"
         android:textStyle="bold"
-        android:text="Mark all as Read"
-        android:layout_margin="8dp"
+        android:textSize="18sp"
         android:textColor="@android:color/black"/>
 
-    <android.support.v7.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/txtv_markall"/>
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/messages_fr_linearlayout_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

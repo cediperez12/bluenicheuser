@@ -1,13 +1,17 @@
 package com.coecs.bluenicheuser;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,7 +26,9 @@ public class Registration extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseDatabase mDatabase;
 
+    private int profileImage = 1;
 
+    private ImageView imageView4;
     private EditText etxt_email,etxt_pass,etxt_fname,etxt_lname;
 
     @Override
@@ -40,6 +46,8 @@ public class Registration extends AppCompatActivity {
         etxt_pass = findViewById(R.id.editText_password_register);
         etxt_fname = findViewById(R.id.editText_firstname_register);
         etxt_lname = findViewById(R.id.editText_lastname_register);
+
+        imageView4 = findViewById(R.id.imageView4);
     }
 
     private void toLogin(){
@@ -58,61 +66,105 @@ public class Registration extends AppCompatActivity {
         progressDialog.setCancelable(false);
 
         emc = new ErrorMessageCreator();
-
          // Display Progress Dialog
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String email = etxt_email.getText().toString().trim();
-                String pass = etxt_pass.getText().toString().trim();
-                final String fname = etxt_fname.getText().toString().trim();
-                final String lname = etxt_lname.getText().toString().trim();
+        String email = etxt_email.getText().toString().trim();
+        String pass = etxt_pass.getText().toString().trim();
+        final String fname = etxt_fname.getText().toString().trim();
+        final String lname = etxt_lname.getText().toString().trim();
 
-                if(email.isEmpty() || pass.isEmpty()){
-                    emc.createSimpleErrorMessage(Registration.this,"Registration","Email and Password cannot be empty.");
-                }else if(fname.isEmpty() || lname.isEmpty()){
-                    emc.createSimpleErrorMessage(Registration.this,"Registration","First name and Last name cannot be empty.");
-                }else{
-                    progressDialog.show();
-                    auth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        if(email.isEmpty() || pass.isEmpty()){
+            emc.createSimpleErrorMessage(Registration.this,"Registration","Email and Password cannot be empty.");
+        }else if(fname.isEmpty() || lname.isEmpty()){
+            emc.createSimpleErrorMessage(Registration.this,"Registration","First name and Last name cannot be empty.");
+        }else{
+            progressDialog.show();
+            auth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(final AuthResult authResult) {
+                    User u = new User();
+                    u.setFirstname(fname);
+                    u.setLastname(lname);
+                    u.setUid(authResult.getUser().getUid());
+                    u.setUserType("USER");
+                    u.setUserRate(0.0);
+                    u.setJob(0);
+                    u.setUserProfileImage(profileImage);
+
+                    mDatabase.getReference("USERS").child(u.getUid()).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onSuccess(final AuthResult authResult) {
-                            User u = new User();
-                            u.setFirstname(fname);
-                            u.setLastname(lname);
-                            u.setUid(authResult.getUser().getUid());
-                            u.setUserType("USER");
-                            u.setUserRate(0.0);
-                            u.setJob(0);
-
-                            mDatabase.getReference("USERS").child(u.getUid()).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        auth.signOut();
-                                        emc.createSimpleMessage(Registration.this, "Registration", "Thank you for your registration, you may now log in to the application.", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                toLogin();
-                                            }
-                                        });
-                                    }else{
-                                        emc.createSimpleErrorMessage(Registration.this,"Registration",task.getException().getMessage());
+                        public void onComplete(Task<Void> task) {
+                            if(task.isSuccessful()){
+                                auth.signOut();
+                                emc.createSimpleMessage(Registration.this, "Registration", "Thank you for your registration, you may now log in to the application.", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        toLogin();
                                     }
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            emc.createSimpleErrorMessage(Registration.this,"Registration",e.getMessage());
+                                });
+                            }else{
+                                emc.createSimpleErrorMessage(Registration.this,"Registration",task.getException().getMessage());
+                            }
                         }
                     });
                 }
-                progressDialog.show();
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    emc.createSimpleErrorMessage(Registration.this,"Registration",e.getMessage());
+                }
+            });
+        }
+        progressDialog.show();
+    }
+
+    public void onClickChangeProfile(View view){
+        View v = LayoutInflater.from(this).inflate(R.layout.profile_selector,null,false);
+
+        final AlertDialog changeProfileDialog =  new AlertDialog.Builder(this)
+                .setTitle("Select your profile photo.")
+                .setView(v)
+                .create();
+
+        CardView[] cards = {
+                v.findViewById(R.id.card_pselector_dp1),
+                v.findViewById(R.id.card_pselector_dp2),
+                v.findViewById(R.id.card_pselector_dp3)
+        };
+
+        cards[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profileImage = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageView4.setImageDrawable(getDrawable(R.drawable.job_logo_1));
+                }
+                changeProfileDialog.dismiss();
             }
-        }).start();
+        });
+
+        cards[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profileImage = 2;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageView4.setImageDrawable(getDrawable(R.drawable.job_logo_2));
+                }
+                changeProfileDialog.dismiss();
+            }
+        });
+
+        cards[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profileImage = 3;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageView4.setImageDrawable(getDrawable(R.drawable.job_logo_3));
+                }
+                changeProfileDialog.dismiss();
+            }
+        });
+
+        changeProfileDialog.show();
     }
 
     public void onClickSignIn(View v){

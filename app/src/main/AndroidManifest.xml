@@ -5,11 +5,12 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Blue Niche' User"
+        android:label="BN User"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main">
+        <activity android:name=".Main"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,14 +22,20 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Registration" />
-        <activity android:name=".Login" />
+        <activity android:name=".Registration"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Login"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ProfileViewer" />
-        <activity android:name=".Conversation"></activity>
+        <activity android:name=".ProfileViewer"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Conversation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SelfProfile"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

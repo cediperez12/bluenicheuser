@@ -3,15 +3,19 @@ package com.coecs.bluenicheuser;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,8 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class dashboard_fr extends Fragment {
+    //Contacts
 
     private FirebaseDatabase database;
     private FirebaseAuth mAuth;
@@ -46,6 +52,8 @@ public class dashboard_fr extends Fragment {
     }
 
     private void init(){
+        workers = new ArrayList<User>();
+
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
     }
@@ -57,6 +65,7 @@ public class dashboard_fr extends Fragment {
 
         mainView = inflater.inflate(R.layout.fragment_dashboard_fr, container, false);
         listview_topworker = mainView.findViewById(R.id.dashboard_top_worker_listview);
+
         return mainView;
     }
 
@@ -66,44 +75,116 @@ public class dashboard_fr extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        listview_topworker.removeAllViews();
+        try{
+            database.getReference("USERS").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                        final User user = ds.getValue(User.class);
 
-        //Fetch Workers.
-        database.getReference("USERS").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                workers = new ArrayList<>();
-                listview_topworker.removeAllViews();
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    final User user = ds.getValue(User.class);
-                    if(user.getUserType().equals(USER_TYPE_1)){
-                        workers.add(user);
+                        Log.e("CURRENT USER",user.getFirstname() + " " + user.getLastname() + " - " + user.getUserType());
 
-                        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dashboard_normal_list_item,null);
-                        TextView tvUserProfileName,tvUserSubtext;
-                        tvUserProfileName = v.findViewById(R.id.dashboard_user_profile_name);
-                        tvUserSubtext = v.findViewById(R.id.dashboard_user_profile_sub_text);
-                        tvUserProfileName.setText(user.getFirstname() + " " + user.getLastname());
-                        tvUserSubtext.setText(user.getWorkerProfession() + " - " + user.getWorkerCoverLocation());
-                        v.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(getContext(),ProfileViewer.class);
-                                i.putExtra("STRING_WORKER_UID",user.getUid());
-                                startActivity(i);
-                                getActivity().finish();
+                        if(user.getUserType().equalsIgnoreCase("WORKER")){
+                            View singleView = LayoutInflater.from(getActivity()).inflate(R.layout.dashboard_normal_list_item,null);
+
+                            TextView dashboard_user_profile_name = singleView.findViewById(R.id.dashboard_user_profile_name), dashboard_user_profile_sub_text =
+                                    singleView.findViewById(R.id.dashboard_user_profile_sub_text);
+                            CardView cardView = singleView.findViewById(R.id.dashboard_list_card);
+
+                            dashboard_user_profile_name.setText(user.getFirstname() + " " + user.getLastname());
+                            dashboard_user_profile_sub_text.setText(user.getWorkerProfession() + "\n" + user.getWorkerCoverLocation());
+
+                            ImageView imgv_userProfile = singleView.findViewById(R.id.dashboard_user_profile_photo);
+
+                            int randomProfile = user.getUserProfileImage();
+
+                            if(randomProfile == 0){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    imgv_userProfile.setImageDrawable(getActivity().getDrawable(R.drawable.job_logo_1));
+                                }
+                            }else if(randomProfile == 1){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    imgv_userProfile.setImageDrawable(getActivity().getDrawable(R.drawable.job_logo_2));
+                                }
+                            }else{
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    imgv_userProfile.setImageDrawable(getActivity().getDrawable(R.drawable.job_logo_3));
+                                }
                             }
-                        });
-                        listview_topworker.addView(v);
-                        Log.d("WORKER",user.getFirstname() + " " + user.getLastname());
+
+                            cardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getActivity(),ProfileViewer.class);
+                                    intent.putExtra("STRING_WORKER_UID",user.getUid());
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                }
+                            });
+
+                            Log.d("ADDVIEW","Added a new view.");
+
+                            listview_topworker.addView(singleView);
+                        }
                     }
                 }
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    throw databaseError.toException();
+                }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                databaseError.toException().printStackTrace();
-            }
-        });
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
+        //Create New Workers
+
+//        User user = new User();
+//        user.setFirstname("Justine");
+//        user.setLastname("Leyba");
+//        user.setUserType("WORKER");
+//        user.setWorkerCoverLocation("Obando");
+//        user.setWorkerProfession("Gamer");
+//        user.setUid(database.getReference("USERS").push().getKey());
+//
+//        database.getReference("USERS").child(user.getUid()).setValue(user);
+//
+//        CurriculumVitae cv = new CurriculumVitae();
+//        cv.setObjective("To be able to teach people, in order to have money.");
+//
+//        ArrayList<String> skills = new ArrayList<>();
+//        skills.add("Game Tester");
+//        skills.add("Documentation");
+//        skills.add("Microsoft Office");
+//
+//        cv.setSkills(skills);
+//
+//        CurriculumVitae.CollegeInfo ci = new CurriculumVitae.CollegeInfo();
+//        ci.setUniversity("STI College");
+//        ci.setYear("2022");
+//        ci.setTertiary("College");
+//        ci.setCourse("BS Information Technology");
+//
+//        cv.setCollegeInfo(ci);
+//
+//        database.getReference("USERS").child(user.getUid()).child("CurriculumVitae").setValue(cv);
+    }
+
+    private void loadWorkerList(ArrayList<User> users){
+        if(!users.isEmpty()){
+            for(final User u : users){
+
+
+            }
+        }else{
+            Log.e("Got nothiing","nothing");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

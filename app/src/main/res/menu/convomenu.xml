@@ -2,14 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/job_start"
-        android:title="Job Start"
-        />
-    <item
-        android:id="@+id/job_done"
-        android:title="Job Done" />
-    <item
-        android:id="@+id/send_location"
-        android:title="Send My Location" />
+    <item android:id="@+id/convo_menu_view_job_info"
+        android:title="View Job Info"></item>
+    <item android:id="@+id/convo_menu_change_pay"
+        android:title="Change Payment"></item>
+    <item android:id="@+id/convo_menu_request_job_end"
+        android:title="Nullify this Job Offer"></item>
+    <item android:id="@+id/convo_menu_report"
+        android:title="Rate"></item>
 </menu>
